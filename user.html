@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Redis Test</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+	
+
+<button class="logoutbtn" onclick="logout()">Logout</button>
+<button class="deletebtn" onclick="delAcc()">Delete Account</button>
+
+<br>
+
+<div class="card">
+  <img src="https://placedog.net/640/480?random" alt="John" style="width:100%">
+  <h1 id="user">John Doe</h1>
+  <p class="title">This is your profile page</p>
+  <p id="email"></p>
+  <p id="created"></p>
+  <br>
+  <p><button>&nbsp;</button></p>
+</div>
+
+
+
+<style>
+
+body{
+	margin:0;
+	color:#6a6f8c;
+	background:rgb(123, 164, 181);
+	height:100vh;
+	font:600 16px/18px 'Open Sans',sans-serif;
+}
+.logoutbtn {
+	margin-top:10px;
+	margin-left:10px;
+	float:left;
+  	background-color: rgb(14, 66, 207);
+  width: 15%;
+	margin-bottom:30px;
+	box-shadow: rgba(0,0,0,0.2) 3px 4px 5px 2px;
+}
+.deletebtn {
+	margin-top:10px;
+	margin-right:10px;
+	float:right;
+  	background-color: rgb(207, 14, 30);
+  width: 15%;
+	margin-bottom:30px;
+	box-shadow: rgba(0,0,0,0.2) 3px 4px 5px 2px;
+}
+
+.card {
+  box-shadow: rgba(0, 0, 0, 0.2) 10px 14px 8px 10px;
+  background-color: rgb(69, 64, 83);
+  max-width: 300px;
+	/* margin-top:; */
+  margin: 10rem auto;
+  text-align: center;
+}
+
+.title {
+  color: grey;
+  font-size: 18px;
+}
+
+button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+a {
+  text-decoration: none;
+  font-size: 22px;
+  color: black;
+}
+
+button:hover, a:hover {
+  opacity: 0.7;
+}
+</style>
+
+
+	<script>
+
+		function loadData(){
+
+			var un = document.querySelector("#user");
+			var email = document.querySelector("#email");
+			var created = document.querySelector("#created");
+			
+
+			un.innerHTML = localStorage.getItem("user");
+			email.innerHTML = "Email: " + localStorage.getItem("email");
+
+			created.innerHTML = "Account Created: " + new Date(localStorage.getItem("created")*1).toLocaleString()
+
+
+		}
+
+		function delAcc(){
+			if(confirm("Are you sure? You can't revert later")){
+		var url = "http://localhost:5000/delete"
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url);
+
+		xhr.setRequestHeader("Accept", "application/json");
+		xhr.setRequestHeader("Content-Type", "application/json");
+
+
+		xhr.send(JSON.stringify(localStorage.getItem("user")));
+	
+		xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4) {
+			logout()
+		}};
+			}
+		}
+
+		function logout(){
+			localStorage.clear()
+			location.href = "/"
+		}
+
+		function created(){
+			if(localStorage.getItem("isLoggedIn") == "true"){
+
+				loadData()
+				return;
+			}
+			logout()
+		}
+
+		created()
+
+
+	</script>
+</body>
+</html>
